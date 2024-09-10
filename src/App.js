@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
 
-export default function App() {
+'use client'
+import React from 'react'
+import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import HomePage from './components/HomePage/HomePage'
+import SignIn from './components/SignUp/SignIn'
+import SignUp from './components/SignUp/SignUp'
+import Dashboard from './components/Dashboard/Dashboard'
+import NotFound from './components/ErrorPages/404_page'
+import { BsRobot } from "react-icons/bs";
+import { FloatButton, Popover } from 'antd';
+import ChatbotModal from './components/ChatBot/Chatbot'
+
+function App() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to up load.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+    {isChatOpen && <ChatbotModal setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen}/>}
+    <Router>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+
+      {/* Catch-all route for 404 Not Found */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+    </Router>
+    {/* Making the customer support icon */}
+    <Popover placement="left" content="AI Customer Support" title="" trigger="hover">
+      <FloatButton icon={<BsRobot className='hover:text-purple-900'/>} className='shadow-4' onClick={
+        () => setIsChatOpen(!isChatOpen)
+      }/>
+    </Popover>
+    </>
+
+
+  )
 }
+
+export default App;

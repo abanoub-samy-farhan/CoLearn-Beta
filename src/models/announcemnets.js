@@ -10,6 +10,7 @@ Table announcements {
 
 const sequelize = require('./db_engin');
 const { DataTypes, Model } = require('sequelize');
+const Classroom = require('./classrooms');
 
 class Announcement extends Model {}
 Announcement.init( {
@@ -33,6 +34,12 @@ Announcement.init( {
 }, { sequelize,
     modelName: "Announcement",
     tableName: 'announcements'
+});
+
+// Defining the relationship between the announcements and classrooms
+Classroom.hasMany(Announcement, {
+    foreignKey: 'classroom_id',
+    onDelete: 'CASCADE'
 });
 
 module.exports = Announcement;

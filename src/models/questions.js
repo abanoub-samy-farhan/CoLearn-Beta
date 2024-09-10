@@ -10,6 +10,7 @@ Table questions {
 
 const sequelize = require('./db_engin');
 const { DataTypes, Model } = require('sequelize');
+const Quiz = require('./quizzes');
 
 class Question extends Model {}
 Question.init({
@@ -39,5 +40,16 @@ Question.init({
     modelName: 'Question',
     tableName: 'questions'
 });
+
+
+// Defining the relationship between the questions and quizzes
+Quiz.hasMany(Question, {
+    foreignKey: 'quiz_id',
+    onDelete: 'CASCADE'
+});
+Question.belongsTo(Quiz, {
+    foreignKey: 'quiz_id'
+});
+
 
 module.exports = Question;

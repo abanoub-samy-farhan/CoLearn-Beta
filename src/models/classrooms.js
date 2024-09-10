@@ -13,6 +13,7 @@ Table classrooms {
 const sequelize = require('./db_engin');
 
 const { DataTypes, Model } = require('sequelize');
+const User = require('./users');
 
 
 
@@ -43,5 +44,14 @@ Classroom.init({
     modelName: 'Classroom',
     tableName: 'classrooms'
 })
+
+// Defining the relationship between the classrooms and users
+User.hasMany(Classroom, {
+    foreignKey: 'created_by',
+    onDelete: 'CASCADE'
+});
+Classroom.belongsTo(User, {
+    foreignKey: 'created_by'
+});
 
 module.exports = Classroom;

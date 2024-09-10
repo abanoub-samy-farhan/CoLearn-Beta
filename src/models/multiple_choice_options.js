@@ -10,6 +10,7 @@
 
 const sequelize = require('./db_engin');
 const { DataTypes, Model} = require('sequelize');
+const Question = require('./questions');
 
 class MultipleChoiceOption extends Model {}
 MultipleChoiceOption.init({
@@ -35,3 +36,13 @@ MultipleChoiceOption.init({
         defaultValue: false,
     }
 }, {sequelize, modelName: "MultipleChoiceOption",tableName: 'multiple_choice_options'});
+
+Question.hasMany(MultipleChoiceOption, {
+    foreignKey: 'question_id',
+    onDelete: 'CASCADE'
+});
+MultipleChoiceOption.belongsTo(Question, {
+    foreignKey: 'question_id'
+});
+
+module.exports = MultipleChoiceOption;

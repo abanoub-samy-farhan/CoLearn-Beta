@@ -12,7 +12,8 @@ Table users {
   updated_at datetime [default: `now()`] // Adding updated_at for tracking updates to user profiles
 }
 */
-const sequelize = require('./db_engin');
+require('dotenv').config();
+const sequelize = require('./db_engin')
 const { DataTypes, Model} = require('sequelize');
 
 class User extends Model {
@@ -25,7 +26,7 @@ User.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        primaryKey: true
+        primaryKey: true,
     },
     firstname: {
         type: DataTypes.STRING,
@@ -43,6 +44,10 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     sequelize,
@@ -50,6 +55,5 @@ User.init({
     tableName: 'users'
 })
 // making a test user to test the model
-
 
 module.exports = User;
