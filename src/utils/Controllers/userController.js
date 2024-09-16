@@ -1,4 +1,16 @@
-const User = require('../models/users');
+/**
+ * @description This file contains the user controller that will manage all the CRUD operations for the user model
+ * @module UserControllers
+ * @function createUser - Create a new user
+ * @function deleteUser - Delete a user
+ * @function getUserById - Get a user by id
+ * @function updateUser - Update a user
+ * @function getAllUsers - Get all users
+ * @function validateUserLoggingIn - Validate user logging in
+ * @exports createUser, deleteUser, getUserById, updateUser, getAllUsers, validateUserLogging
+ */
+
+const User = require('../../models/users');
 const bcrypt = require('bcryptjs');
 const { genSalt } = require('bcrypt');
 
@@ -43,7 +55,7 @@ exports.validateUserLoggingIn = async (req, res) => {
         const user = User.findOne({where: {
         email: email,
         }})
-        await bcrypt.compare(password, user.password, (err, result) => {
+        bcrypt.compare(password, user.password, (err, result) => {
             if (err){
                 console.log("Error Happend")
             }

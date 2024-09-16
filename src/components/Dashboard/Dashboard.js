@@ -147,7 +147,7 @@ export default function Dashboard() {
           )}
 
           {/* Sidebar */}
-          <div className="w-64 bg-gray-900 text-white lg:flex lg:flex-col hidden">
+          <div className="w-64 bg-gray-900 text-white lg:flex lg:flex-col hidden fixed h-full">
             <div className="flex-shrink-0 p-6">
               <a href="/" className="text-white text-lg font-bold">
                 CoLearn Dashboard
@@ -180,14 +180,14 @@ export default function Dashboard() {
                 className="group flex items-center px-2 py-2 text-sm font-medium w-full rounded-md text-gray-300 hover:bg-red-700 hover:text-white mb-10 m-1"
                 onClick={() => setIsDeleteModalOpen(true)}
               >
-                <DeleteOutlined className="mr-2" />
+                <DeleteOutlined className="mr-2"/>
                 Delete Account
               </button>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="flex-auto p-6">
+          <div className="flex-auto p-6 lg:ml-64">
             <QuizMaker />
           </div>
         </div>

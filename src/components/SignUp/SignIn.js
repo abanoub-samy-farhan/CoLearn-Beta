@@ -71,7 +71,10 @@ export default function SignIn() {
         console.log(data.id)
         setCookie('session_id', data.id, {path: '/'});
         window.location.href = '/dashboard'
-      } else {
+      } else if (res.status === 404) {
+        setLoginError('The user is not registered')
+      }
+      else {
         setLoginError('Invalid email or password')
       }
     })

@@ -79,7 +79,8 @@ export default function ChatbotModal({ setIsChatOpen, isChatOpen }) {
     <div>
       {/* Chat Modal */}
       {isChatOpen && (
-        <div className="fixed inset-0 flex items-end justify-center lg:items-center bg-gray-800 bg-opacity-50 z-50 ease-in-out duration-300">
+        <div  className={`fixed inset-0 flex items-end justify-center lg:items-center bg-gray-900 bg-opacity-50 z-50 transition-opacity ease-in-out duration-300 ${
+          isChatOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           <div className="bg-white rounded-t-full lg:rounded-lg shadow-lg w-full lg:w-1/3 h-2/3 flex flex-col">
             {/* Header */}
             <div className="bg-purple-600 text-white p-4 flex justify-between items-center rounded-t-lg">

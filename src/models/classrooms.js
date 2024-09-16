@@ -4,6 +4,7 @@ Table classrooms {
   id uuid [primary key]
   description text
   classroom_name varchar
+  classroom_code varchar [unique]
   created_by uuid [not null, ref: > users.id]
   created_at datetime [default: `now()`]
   updated_at datetime [default: `now()`]
@@ -31,6 +32,12 @@ Classroom.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    classroom_code: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    }
+    ,
     created_by : {
         type: DataTypes.UUID,
         allowNull: false,

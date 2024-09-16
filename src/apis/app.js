@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
-const userRoutes = require('./views/userRoutes');
+const userRoutes = require('./v1/userRoutes');
 const { authMiddleware } = require('./auth/authMiddleWare');
 
 
@@ -12,6 +12,10 @@ const User = require('../models/users');
 const port = 5500;
 
 const app = express();
+
+app.response.SendStatus = function (status){
+
+}
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -77,7 +81,8 @@ app.post('/signin', async (req, res) => {
 
 
 // Other routes
-app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/users', authMiddleware ,userRoutes);
+app.use('/api/v1/classrooms', require('./v1/classroomRoutes'));
 app.use('/api/chat', require('./ChatBootRoute/chatbootroute'));
 
 app.listen(port, () => {

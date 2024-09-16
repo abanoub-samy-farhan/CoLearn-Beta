@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { DeleteOutlined, EditOutlined, CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { DatePicker, Space } from 'antd';
+import { DatePicker, Space,Checkbox, Select, InputNumber, Input} from 'antd';
 
 function QuizMaker() {
   const [quizInfo, setQuizInfo] = useState({
     title: '',
     description: '',
+    dueDate: '',
   });
 
   const [questions, setQuestions] = useState(() => {
@@ -22,6 +23,7 @@ function QuizMaker() {
     title: '',
     grade: 0,
     options: [''],
+    correct_option: '',
     writtenAnswer: '',
     isSaved: false,
   });
@@ -79,12 +81,10 @@ function QuizMaker() {
       console.log('Quiz Published:', { quizInfo, questions });
     }
   };
-  const onOk = (value) => {
-    console.log('onOk: ', value);
-  };
 
   return (
-    <div className="overflow-hidden h-full">
+    <div className="h-full bg-gray-100 overflow-auto">
+      <h1 className="font-semibold p-4 text-3xl text-purple-700">Create a Quiz</h1>
       <div className="p-4 bg-gray-100 rounded-lg space-y-6">
         <div className="p-4 bg-white shadow-md rounded-lg gap">
           <label className="block">
@@ -109,36 +109,35 @@ function QuizMaker() {
             Due Date:
             <DatePicker
               showTime
-              onChange={(value, dateString) => {
-                console.log('Selected Time: ', value);
-                console.log('Formatted Selected Time: ', dateString);
+              className='hover:border-purple-500 click:border-purple-500'
+              onChange={(date, dateString) => {
+                handleQuizInfoChange('dueDate', dateString)
               }}
-              onOk={onOk}
             />
           </Space>
         </div>
 
         {/* Questions */}
-        <div className="space-y-6 max-h-[50vh] overflow-y-auto p-4 bg-gray-100 rounded-lg">
+        <div className="space-y-6 p-4 bg-gray-100 rounded-lg">
           {questions.map((question, qIndex) => (
             <div key={qIndex} className="p-4 bg-white shadow-md rounded-lg">
               {!question.isSaved ? (
                 <div>
-                  <label className="block">
+                  <label className="block flex flex-col gap-2">
                     Question Type:
-                    <select
-                      value={question.type}
-                      onChange={(e) => handleQuestionChange(qIndex, 'type', e.target.value)}
-                      className="block w-full mt-2 p-2 border rounded"
+                    <Select
+                      defaultValue={question.type}
+                      onChange={(value) => handleQuestionChange(qIndex, 'type', value)}
+                      className='w-2/6'
                     >
                       <option value="multiple-choice">Multiple Choice</option>
                       <option value="true-false">Written</option>
-                    </select>
+                    </Select>
                   </label>
 
                   <label className="block mt-4">
                     Question Title:
-                    <input
+                    <Input
                       value={question.title}
                       onChange={(e) => handleQuestionChange(qIndex, 'title', e.target.value)}
                       className="block w-full mt-2 p-2 border rounded"
@@ -146,13 +145,13 @@ function QuizMaker() {
                     />
                   </label>
 
-                  <label className="block mt-4">
+                  <label className="block mt-4 flex flex-col">
                     Grade:
-                    <input
+                    <InputNumber
                       type="number"
                       value={question.grade}
-                      onChange={(e) => handleQuestionChange(qIndex, 'grade', e.target.value)}
-                      className="block w-full mt-2 p-2 border rounded"
+                      className='w-40'
+                      onChange={(value) => handleQuestionChange(qIndex, 'grade', value)}
                       placeholder="Enter grade"
                     />
                   </label>
@@ -161,21 +160,35 @@ function QuizMaker() {
                     <div className="mt-4 space-y-2">
                       {question.options.map((option, oIndex) => (
                         <div key={oIndex} className="flex items-center gap-2">
-                          <input
-                            value={option}
+                          <Checkbox
+                            checked={question.correct_option === oIndex}
+                            onChange={(e) => {
+                              const updatedQuestions = [...questions];
+                              if (e.target.checked && !updatedQuestions[qIndex].correct_option) {
+                                updatedQuestions[qIndex].correct_option = oIndex;
+                              } else if (e.target.checked && updatedQuestions[qIndex].correct_option) {
+                                // replace the index of the correct option and uncheck the previous one
+                                updatedQuestions[qIndex].correct_option = oIndex;
+                              }
+                              setQuestions(updatedQuestions);                              
+                            }}
+                          />
+                          <Input
+                            defaultValue={option}
+                            size='middle'
                             onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
-                            className="block w-2/5 p-2 border rounded"
+                            className="w-1/6"
                             placeholder={`Option ${oIndex + 1}`}
                           />
                           <button
-                            className="bg-red-500 text-white px-3 py-2 rounded-full hover:bg-red-600"
+                            className="transparent text-black hover:text-red-500 transition ease-in-out duration-300"
                             onClick={() => {
                               const updatedQuestions = [...questions];
                               updatedQuestions[qIndex].options = updatedQuestions[qIndex].options.filter((_, i) => i !== oIndex);
                               setQuestions(updatedQuestions);
                             }}
                           >
-                            <CloseCircleOutlined />
+                            <CloseCircleOutlined/>
                           </button>
                         </div>
                       ))}
@@ -198,15 +211,14 @@ function QuizMaker() {
                     </label>
                   )}
 
-                  <div className="flex justify-end space-x-2 mt-4">
+                  <div className="flex justify-center mt-4 w-full">
                     <button
-                      className="bg-gray-500 text-white px-4 py-2 rounded-md"
                       onClick={() => deleteQuestion(qIndex)}
                     >
-                      <DeleteOutlined />
+                      <DeleteOutlined className='text-black transition ease-in-out duration-300 h-10 w-20 justify-center hover:text-red-700 border rounded-l-md hover:bg-red-200' />
                     </button>
                     <button
-                      className="bg-green-500 text-white px-4 py-2 rounded-md"
+                      className="text-black transition ease-in-out duration-300 h-10 w-20 hover:text-green-700 border rounded-r-md hover:bg-green-200"
                       onClick={() => saveQuestion(qIndex)}
                     >
                       Save
@@ -214,26 +226,34 @@ function QuizMaker() {
                   </div>
                 </div>
               ) : (
-                <div>
+                <div className=''>
                   <h3 className="font-semibold">{question.title}</h3>
                   <p>Grade: {question.grade}</p>
-                  <ul className="list-disc ml-4">
+                  {question.type === 'multiple-choice' ? (
+                    <ul className="list-disc ml-4">
                     {question.options.map((option, oIndex) => (
-                      <li key={oIndex}>{option}</li>
+                      {option} && <li key={oIndex}>{option}</li>
                     ))}
                   </ul>
-                  <div className="flex justify-end space-x-2 mt-4">
+                  ): (
+                    <div>
+                      <p>Written Answer:</p>
+                      <div className='p-2 border h-fit border-purple-400 rounded-md mt-2'>
+                        {question.writtenAnswer}
+                      </div>
+                  </div>
+                  )}
+                  <div className="flex justify-center mt-4 w-full">
                     <button
-                      className="bg-yellow-500 text-white px-3 py-2 rounded-full"
+                      className="transparent text-white rounded-md"
                       onClick={() => editQuestion(qIndex)}
                     >
-                      <EditOutlined />
+                      <EditOutlined className='text-black transition ease-in-out duration-10 px-2 py-2 hover:bg-purple-200 hover:text-purple-700 border rounded-l-md h-10 w-20 justify-center'/>
                     </button>
                     <button
-                      className="bg-gray-500 text-white px-3 rounded-full"
                       onClick={() => deleteQuestion(qIndex)}
                     >
-                      <DeleteOutlined />
+                      <DeleteOutlined className='text-black transition ease-in-out duration-300 h-10 w-20 justify-center hover:text-red-700 border rounded-r-md hover:bg-red-200' />
                     </button>
                   </div>
                 </div>
@@ -241,22 +261,22 @@ function QuizMaker() {
             </div>
           ))}
 
-          <div className="flex justify-end space-x-4 mt-6">
+          <div className="flex justify-center space-x-4 mt-6">
             <button
-              className="bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-600"
+              className="transparent border border-2 border-black hover:border-purple-500 transition-all ease-in-out duration-300 text-black hover:text-purple-500 px-4 py-2 rounded-md"
               onClick={addQuestion}
             >
               <PlusOutlined className="mr-2" />
               Add Question
             </button>
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              className="transparent border border-2 border-black hover:border-green-500 transition-all ease-in-out duration-300 text-black hover:text-white hover:bg-green-500 px-4 py-2 rounded-md"
               onClick={() => handleQuizAction('save')}
             >
               Save Quiz
             </button>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+              className="transparent border border-2 border-black hover:border-purple-500 transition-all ease-in-out duration-300 text-black hover:text-purple-500 px-4 py-2 rounded-md"
               onClick={() => handleQuizAction('publish')}
             >
               Publish Quiz
