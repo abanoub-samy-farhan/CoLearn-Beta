@@ -19,15 +19,15 @@ function App() {
     <>
     {isChatOpen && <ChatbotModal setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen}/>}
     <Router>
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
 
-      {/* Catch-all route for 404 Not Found */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="/dashboard/*" element={<Dashboard />} />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </Router>
     {/* Making the customer support icon */}
     <Popover placement="left" content="AI Customer Support" title="" trigger="hover">

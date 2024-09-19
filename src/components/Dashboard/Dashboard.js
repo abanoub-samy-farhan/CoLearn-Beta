@@ -1,17 +1,19 @@
 'use client';
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Navigate } from 'react-router-dom';
 import { MdMenu } from "react-icons/md";
 import { LogoutOutlined, DeleteOutlined } from '@ant-design/icons';
 import { CookiesProvider, useCookies } from 'react-cookie';
 import Classrooms from './Classrooms';
 import QuizMaker from './Quizmaker';
+import NotFound from '../ErrorPages/404_page';
 
 const navigationItems = [
-  { name: 'Classrooms', href: '#' },
-  { name: 'Assignments', href: '#' },
-  { name: 'Quizzes', href: '#' },
-  { name: 'Analytics', href: '#analytics' },
+  { name: 'classrooms', href: '/dashboard/classrooms' },
+  { name: 'assignments', href: '/dashboard/assignments' },
+  { name: 'quizzes', href: '/dashboard/quizzes' },
+  { name: 'analytics', href: '/dashboard/analytics' },
 ];
 
 function DeleteAccountModal({ setIsModalOpen, removeCookie, cookies }) {
@@ -57,7 +59,7 @@ function DeleteAccountModal({ setIsModalOpen, removeCookie, cookies }) {
 }
 
 function MobileMenu({ setIsModalOpen }) {
-  const [selectedItem, setSelectedItem] = useState(navigationItems[0].name);
+  const [selectedItem, setSelectedItem] = useState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -127,7 +129,7 @@ function MobileMenu({ setIsModalOpen }) {
 }
 
 export default function Dashboard() {
-  const [selectedItem, setSelectedItem] = useState(navigationItems[0].name);
+  const [selectedItem, setSelectedItem] = useState(window.location.pathname.split('/')[2] || navigationItems[0].name);
   const [cookies, setCookie, removeCookie] = useCookies(['session_id']);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -163,7 +165,7 @@ export default function Dashboard() {
                     selectedItem === item.name ? 'bg-purple-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                   }`}
                 >
-                  {item.name}
+                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                 </a>
               ))}
             </nav>
@@ -188,7 +190,14 @@ export default function Dashboard() {
 
           {/* Main Content */}
           <div className="flex-auto p-6 lg:ml-64">
-            <QuizMaker />
+          <Routes>
+            <Route path="/" element={<Classrooms user_id={cookies['session_id']} />} />
+            <Route path="classrooms" element={<Classrooms user_id={cookies['session_id']} />} />
+            <Route path="quizmaker" element={<QuizMaker />} />
+
+            {/* Add a catch-all route for undefined paths under /dashboard */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
           </div>
         </div>
       ) : (

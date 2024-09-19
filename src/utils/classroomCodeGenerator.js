@@ -19,7 +19,6 @@ const generateClassroomCodeMethod = async () => {
             UniqueCode = true;
         }
     }
-    console.log(code);
     return code;
 }
 

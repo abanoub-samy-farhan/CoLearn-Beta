@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# CoLearn Beta
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CoLearn is an AI-powered classroom management system designed to facilitate the seamless creation of classrooms, announcements, quizzes, and assignments. It enables teachers to provide AI-driven analytics and performance feedback to students in real-time, making learning more efficient and interactive.
 
 ## Available Scripts
 

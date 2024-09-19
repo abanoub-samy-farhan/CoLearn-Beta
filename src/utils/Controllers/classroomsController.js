@@ -17,13 +17,13 @@
 const Classroom = require('../../models/classrooms')
 const User = require('../../models/users')
 const User_Classroom = require('../../models/users_classrooms')
-const { generateClassroomCodeMethod } = require('../classroomCodeGenerator')
+const generateClassroomCodeMethod = require('./../classroomCodeGenerator')
 
 
 exports.getAllClassrooms = async (req, res) => {
     try {
         const classrooms = await Classroom.findAll();
-        res.statue(200).json(classrooms);
+        res.status(200).json(classrooms);
     } catch (error) {
         console.log("There is some error happened while retriving the whole classrooms", error)
         res.status(500).json({error: "Internal server error"})
@@ -117,7 +117,7 @@ exports.getClassroomUsingCreatedByAttribute = async (req, res) => {
 
 exports.getClassroomAsscoiatedToUserId = async (req, res) => {
     try {
-        const classrooms = await User_Classroom.findAll({where: {user_id: req.params.id}});
+        const classrooms = await User_Classroom.findAll({where: {user_id: req.headers.user_id}});
         res.status(200).json(classrooms);
     } catch (error) {
         console.log("There is some error happened while retriving the classrooms", error)

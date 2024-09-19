@@ -69,7 +69,7 @@ export default function SignIn() {
         console.log('Logged in successfully')
         const data = await res.json()
         console.log(data.id)
-        setCookie('session_id', data.id, {path: '/'});
+        setCookie('session_id', data.id, { path: '/' })
         window.location.href = '/dashboard'
       } else if (res.status === 404) {
         setLoginError('The user is not registered')
